@@ -94,6 +94,17 @@ public sealed class ExportJsonTests
         Assert.Equal("Apophis", JsonNode.Parse(ExportJson.Serialize(post))!["author"]!.GetValue<string>());
     }
 
+    [Fact]
+    public void Page_is_serialized_with_kind_page_and_without_blog()
+    {
+        var page = new ExportPage(Id: "pages/impressum", Author: "Apophis", Translations: [new Translation(Language.De, "Impressum", "impressum", AnyBody)]);
+
+        var json = JsonNode.Parse(ExportJson.Serialize(page))!.AsObject();
+
+        Assert.Equal("page", json["kind"]!.GetValue<string>());
+        Assert.False(json.ContainsKey("blog"));
+    }
+
     private static readonly Body AnyBody = new FullBody("<p>text</p>");
 
     private static JsonNode SerializedTranslation(Translation translation)

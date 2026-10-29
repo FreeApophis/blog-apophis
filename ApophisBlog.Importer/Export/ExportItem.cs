@@ -4,9 +4,13 @@ using System.Text.Json.Serialization;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "kind")]
 [JsonDerivedType(typeof(ExportPost), "post")]
+[JsonDerivedType(typeof(ExportPage), "page")]
 public closed record ExportItem(string Id, string Author, IReadOnlyList<Translation> Translations);
 
 public sealed record ExportPost(string Id, string Author, string Blog, IReadOnlyList<Translation> Translations)
+    : ExportItem(Id, Author, Translations);
+
+public sealed record ExportPage(string Id, string Author, IReadOnlyList<Translation> Translations)
     : ExportItem(Id, Author, Translations);
 
 public sealed record Translation(
