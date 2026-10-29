@@ -150,6 +150,25 @@ public sealed class ExportJsonTests
             SerializedTranslation(translation)["comments"]!.ToJsonString());
     }
 
+    [Fact]
+    public void Serialized_item_reads_back_to_the_same_json()
+    {
+        var translation = new Translation(Language.De, "Chaos pur", "chaos-pur", new SummaryBody("<p>…</p>"), PublishedAt: new DateTimeOffset(2008, 7, 14, 15, 20, 23, TimeSpan.FromHours(2)))
+        {
+            Tags = ["Indien"],
+            Comments = [new Comment("drupal:12", "Duke", "<p>!</p>", ParentId: "drupal:11")],
+        };
+        var json = ExportJson.Serialize(new ExportPost("journey/chaos-pur", "Apophis", "journey", [translation]));
+
+        var roundTripped = ExportJson.Deserialize(json).Select(ExportJson.Serialize);
+
+        FunctionalAssert.Right(json, roundTripped);
+    }
+
+    [Fact]
+    public void Invalid_json_is_an_error_value()
+        => FunctionalAssert.Left(ExportJson.Deserialize("{ not json"));
+
     private static readonly Body AnyBody = new FullBody("<p>text</p>");
 
     private static JsonNode SerializedTranslation(Translation translation)

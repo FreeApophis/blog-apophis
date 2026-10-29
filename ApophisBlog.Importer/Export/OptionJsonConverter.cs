@@ -30,7 +30,9 @@ public sealed class OptionJsonConverter : JsonConverterFactory
         where T : notnull
     {
         public override Option<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            => throw new NotSupportedException("Reading the export is not implemented yet.");
+            => reader.TokenType == JsonTokenType.Null
+                ? Option<T>.None
+                : Option.Some(JsonSerializer.Deserialize<T>(ref reader, options)!);
 
         public override void Write(Utf8JsonWriter writer, Option<T> value, JsonSerializerOptions options)
             => value.Switch(

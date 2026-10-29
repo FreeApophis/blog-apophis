@@ -18,4 +18,18 @@ public static class ExportJson
 
     public static string Serialize(ExportItem item)
         => JsonSerializer.Serialize(item, Options);
+
+    /// <summary>Reads an exported item; malformed JSON is returned as an error message, not thrown.</summary>
+    public static Either<string, ExportItem> Deserialize(string json)
+    {
+        try
+        {
+            return Option.FromNullable(JsonSerializer.Deserialize<ExportItem>(json, Options))
+                .ToEither("The JSON document is null.");
+        }
+        catch (JsonException exception)
+        {
+            return Either<string, ExportItem>.Left(exception.Message);
+        }
+    }
 }
