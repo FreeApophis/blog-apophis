@@ -12,7 +12,7 @@ public sealed class ExportJsonTests
         var post = new ExportPost(
             Id: "journey/hello-hongkong",
             Blog: "journey",
-            Translations: [new Translation(Language.En, Title: "Hello 香港 (Hongkong)", Slug: "hello-hongkong")]);
+            Translations: [new Translation(Language.En, Title: "Hello 香港 (Hongkong)", Slug: "hello-hongkong", Body: new FullBody("<p>Hello</p>"))]);
 
         AssertJsonEqual(
             """
@@ -21,7 +21,12 @@ public sealed class ExportJsonTests
               "id": "journey/hello-hongkong",
               "blog": "journey",
               "translations": [
-                { "language": "en", "title": "Hello 香港 (Hongkong)", "slug": "hello-hongkong" }
+                {
+                  "language": "en",
+                  "title": "Hello 香港 (Hongkong)",
+                  "slug": "hello-hongkong",
+                  "body": { "completeness": "full", "html": "<p>Hello</p>" }
+                }
               ]
             }
             """,
@@ -31,25 +36,38 @@ public sealed class ExportJsonTests
     [Fact]
     public void Optional_headline_is_written_when_present()
     {
-        var translation = new Translation(Language.De, "Chaos pur", "chaos-pur", Headline: Option.Some("Was gibt es aus Indien zu erzählen"));
+        var translation = new Translation(Language.De, "Chaos pur", "chaos-pur", AnyBody, Headline: Option.Some("Was gibt es aus Indien zu erzählen"));
 
-        var json = JsonNode.Parse(ExportJson.Serialize(PostWith(translation)))!;
+        var json = SerializedTranslation(translation);
 
-        Assert.Equal("Was gibt es aus Indien zu erzählen", json["translations"]![0]!["headline"]!.GetValue<string>());
+        Assert.Equal("Was gibt es aus Indien zu erzählen", json["headline"]!.GetValue<string>());
     }
 
     [Fact]
     public void Optional_headline_is_left_out_when_absent()
     {
-        var translation = new Translation(Language.De, "Chaos pur", "chaos-pur");
+        var translation = new Translation(Language.De, "Chaos pur", "chaos-pur", AnyBody);
 
-        var json = JsonNode.Parse(ExportJson.Serialize(PostWith(translation)))!;
+        var json = SerializedTranslation(translation);
 
-        Assert.False(json["translations"]![0]!.AsObject().ContainsKey("headline"));
+        Assert.False(json.AsObject().ContainsKey("headline"));
     }
 
-    private static ExportPost PostWith(Translation translation)
-        => new(Id: "journey/chaos-pur", Blog: "journey", Translations: [translation]);
+    [Fact]
+    public void Summary_body_is_marked_as_summary()
+    {
+        var translation = new Translation(Language.En, "Namaste Neu Delhi", "namaste-neu-delhi", new SummaryBody("<p>It is hot…</p>"));
+
+        var body = SerializedTranslation(translation)["body"]!;
+
+        Assert.Equal("summary", body["completeness"]!.GetValue<string>());
+        Assert.Equal("<p>It is hot…</p>", body["html"]!.GetValue<string>());
+    }
+
+    private static readonly Body AnyBody = new FullBody("<p>text</p>");
+
+    private static JsonNode SerializedTranslation(Translation translation)
+        => JsonNode.Parse(ExportJson.Serialize(new ExportPost(Id: "journey/any", Blog: "journey", Translations: [translation])))!["translations"]![0]!;
 
     private static void AssertJsonEqual(string expected, string actual)
         => Assert.True(
