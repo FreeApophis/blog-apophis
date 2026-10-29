@@ -9,7 +9,13 @@ public closed record ExportItem(string Id, IReadOnlyList<Translation> Translatio
 public sealed record ExportPost(string Id, string Blog, IReadOnlyList<Translation> Translations)
     : ExportItem(Id, Translations);
 
-public sealed record Translation(Language Language, string Title, string Slug, Body Body, Option<string> Headline = default);
+public sealed record Translation(
+    Language Language,
+    string Title,
+    string Slug,
+    Body Body,
+    Option<string> Headline = default,
+    Option<DateTimeOffset> PublishedAt = default);
 
 /// <summary>Whether the archived text is the whole post or only a summary from a listing.</summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "completeness")]

@@ -64,6 +64,15 @@ public sealed class ExportJsonTests
         Assert.Equal("<p>It is hot…</p>", body["html"]!.GetValue<string>());
     }
 
+    [Fact]
+    public void Publication_date_is_iso_8601_with_offset()
+    {
+        var publishedAt = new DateTimeOffset(2008, 7, 5, 12, 51, 29, TimeSpan.FromHours(2));
+        var translation = new Translation(Language.De, "Namaste Neu Delhi", "namaste-neu-delhi", AnyBody, PublishedAt: publishedAt);
+
+        Assert.Equal("2008-07-05T12:51:29+02:00", SerializedTranslation(translation)["publishedAt"]!.GetValue<string>());
+    }
+
     private static readonly Body AnyBody = new FullBody("<p>text</p>");
 
     private static JsonNode SerializedTranslation(Translation translation)
