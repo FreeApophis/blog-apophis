@@ -7,26 +7,38 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 
 using ApophisBlog.Importer.Export;
+using ApophisBlog.Importer.Functional;
 using ApophisBlog.Importer.Loading;
 
-/// <summary>Reads SilverStripe blog pages: the post of a detail page (<c>div.blogEntry</c>).</summary>
+/// <summary>Reads SilverStripe blog pages: the full post of a detail page (<c>div.blogEntry</c>) or the summaries of a listing (<c>div.blogSummary</c>).</summary>
 public static partial class SilverStripePages
 {
     private static readonly HtmlParser Parser = new();
 
     public static Either<string, IReadOnlyList<ParsedPost>> Parse(LoadedFile file)
-        => Option.FromNullable(Parser.ParseDocument(file.Text).QuerySelector("div.blogEntry"))
+    {
+        var document = Parser.ParseDocument(file.Text);
+        return Option.FromNullable(document.QuerySelector("div.blogEntry"))
             .Match(
-                none: Either<string, IReadOnlyList<ParsedPost>>.Right([]),
-                some: entry => DetailPost(file.Entry, entry).Select(post => (IReadOnlyList<ParsedPost>)[post]));
+                none: () => document.QuerySelectorAll("div.blogSummary:not(.row)")
+                    .Select(summary => ListedPost(file.Entry, summary))
+                    .Sequence(),
+                some: entry => Post(file.Entry, entry, file.Entry.OriginalUrl, html => new FullBody(html)).Select(post => (IReadOnlyList<ParsedPost>)[post]));
+    }
 
-    private static Either<string, ParsedPost> DetailPost(ManifestEntry origin, IElement entry)
+    /// <summary>A listing entry links to its post; the link may be absolute or rewritten to a relative local file.</summary>
+    private static Either<string, ParsedPost> ListedPost(ManifestEntry origin, IElement summary)
+        => Option.FromNullable(summary.QuerySelector("h2.postTitle a")?.GetAttribute("href"))
+            .ToEither($"{origin.LocalFile}: blogSummary without post link")
+            .SelectMany(href => Post(origin, summary, Urls.Resolve(origin.OriginalUrl, href), html => new SummaryBody(html)));
+
+    private static Either<string, ParsedPost> Post(ManifestEntry origin, IElement entry, string postUrl, Func<string, Body> body)
         => Option.FromNullable(entry.QuerySelector("h2.postTitle"))
             .Select(title => title.TextContent.Trim())
-            .ToEither($"{origin.LocalFile}: blogEntry without postTitle")
+            .ToEither($"{origin.LocalFile}: post without postTitle")
             .Select(title =>
             {
-                var path = SilverStripeSite.PathSegments(origin.OriginalUrl);
+                var path = Urls.PathSegments(postUrl);
                 return new ParsedPost(
                     SourceSystem.SilverStripe,
                     origin,
@@ -34,7 +46,7 @@ public static partial class SilverStripePages
                     title,
                     Slug: path[^1],
                     Blog: SilverStripeSite.BlogOf(path),
-                    new FullBody(BodyHtml(entry)),
+                    body(BodyHtml(entry)),
                     PublishedAt: Option.FromNullable(entry.QuerySelector("a.date")).SelectMany(date => SwissLocalTime(date.TextContent)))
                 {
                     Tags = entry.QuerySelectorAll("p.tags a[rel=tag]").Select(tag => tag.TextContent.Trim()).ToList(),
@@ -45,7 +57,7 @@ public static partial class SilverStripePages
         => string.Join("\n", entry.Children.Where(child => !IsMeta(child)).Select(child => child.OuterHtml));
 
     private static bool IsMeta(IElement element)
-        => element.Matches("a.date, h2.postTitle, p.authorDate, p.tags") || CommentCount().IsMatch(element.TextContent);
+        => element.Matches("a.date, h2.postTitle, p.authorDate, p.tags, p.blogVitals") || CommentCount().IsMatch(element.TextContent);
 
     /// <summary>Visible date text, e.g. "Aug14th ’08 9:53 am" (the abbr title holds a wrong month, so it is ignored).</summary>
     private static Option<DateTimeOffset> SwissLocalTime(string text)

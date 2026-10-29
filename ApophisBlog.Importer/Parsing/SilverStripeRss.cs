@@ -22,7 +22,7 @@ public static class SilverStripeRss
         => from title in Required(origin, item, "title")
            from link in Required(origin, item, "link")
            from html in Required(origin, item, "description")
-           let path = SilverStripeSite.PathSegments(link)
+           let path = Urls.PathSegments(link)
            select new ParsedPost(
                SourceSystem.SilverStripe,
                origin,

@@ -26,6 +26,22 @@ public sealed class SilverStripePagesTests
         Assert.DoesNotContain("Comments</p>", body.Html, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Listing_entries_become_summary_posts_with_their_tags()
+    {
+        var page = Fixture("silverstripe/blogs-start-20.html", "apophis.ch/blogs/index.html@start=20.html", "http://apophis.ch/blogs/?start=20");
+
+        var posts = SilverStripePages.Parse(page).GetOrElse(error => throw new InvalidOperationException(error));
+
+        Assert.Equal(10, posts.Count);
+        var namaste = Assert.Single(posts, p => p.Title == "Namaste Neu Delhi");
+        Assert.Equal("namaste-neu-delhi", namaste.Slug);
+        Assert.Equal(Option.Some("journey-blog"), namaste.Blog);
+        Assert.Equal(["New-Delhi", "India"], namaste.Tags);
+        Assert.Equal(Option.Some(new DateTimeOffset(2008, 7, 5, 12, 51, 0, TimeSpan.FromHours(2))), namaste.PublishedAt);
+        Assert.Equal(new SummaryBody("<p>It is hot... the weather is sticky... and its raining\nregularly...</p>"), namaste.Body);
+    }
+
     private static LoadedFile Fixture(string fixture, string localFile, string originalUrl)
         => new(
             new ManifestEntry(localFile, DateTimeOffset.UnixEpoch, originalUrl, "text/html"),

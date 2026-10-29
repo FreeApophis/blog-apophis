@@ -15,10 +15,6 @@ internal static class SilverStripeSite
     public static Language LanguageOf(ManifestEntry origin)
         => origin.LocalFile.StartsWith("thomasbruderer.ch/", StringComparison.Ordinal) ? Language.De : Language.En;
 
-    /// <summary>Path segments of a URL without scheme and host; string-based because <see cref="Uri"/> may trim trailing dots ("ende...").</summary>
-    public static string[] PathSegments(string url)
-        => url.Split("://", 2)[^1].Split('/', StringSplitOptions.RemoveEmptyEntries)[1..];
-
     /// <summary>The blog of <c>/blogs/&lt;blog&gt;/&lt;slug&gt;</c>.</summary>
     public static Option<string> BlogOf(string[] path)
         => path.SkipWhile(segment => segment != "blogs").Skip(1).FirstOrNone();
