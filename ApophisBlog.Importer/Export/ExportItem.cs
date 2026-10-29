@@ -4,10 +4,10 @@ using System.Text.Json.Serialization;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "kind")]
 [JsonDerivedType(typeof(ExportPost), "post")]
-public closed record ExportItem(string Id, IReadOnlyList<Translation> Translations);
+public closed record ExportItem(string Id, string Author, IReadOnlyList<Translation> Translations);
 
-public sealed record ExportPost(string Id, string Blog, IReadOnlyList<Translation> Translations)
-    : ExportItem(Id, Translations);
+public sealed record ExportPost(string Id, string Author, string Blog, IReadOnlyList<Translation> Translations)
+    : ExportItem(Id, Author, Translations);
 
 public sealed record Translation(
     Language Language,
@@ -15,7 +15,10 @@ public sealed record Translation(
     string Slug,
     Body Body,
     Option<string> Headline = default,
-    Option<DateTimeOffset> PublishedAt = default);
+    Option<DateTimeOffset> PublishedAt = default)
+{
+    public IReadOnlyList<string> Tags { get; init; } = [];
+}
 
 /// <summary>Whether the archived text is the whole post or only a summary from a listing.</summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "completeness")]

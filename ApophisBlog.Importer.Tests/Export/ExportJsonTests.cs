@@ -11,6 +11,7 @@ public sealed class ExportJsonTests
     {
         var post = new ExportPost(
             Id: "journey/hello-hongkong",
+            Author: "Apophis",
             Blog: "journey",
             Translations: [new Translation(Language.En, Title: "Hello 香港 (Hongkong)", Slug: "hello-hongkong", Body: new FullBody("<p>Hello</p>"))]);
 
@@ -19,12 +20,14 @@ public sealed class ExportJsonTests
             {
               "kind": "post",
               "id": "journey/hello-hongkong",
+              "author": "Apophis",
               "blog": "journey",
               "translations": [
                 {
                   "language": "en",
                   "title": "Hello 香港 (Hongkong)",
                   "slug": "hello-hongkong",
+                  "tags": [],
                   "body": { "completeness": "full", "html": "<p>Hello</p>" }
                 }
               ]
@@ -73,10 +76,28 @@ public sealed class ExportJsonTests
         Assert.Equal("2008-07-05T12:51:29+02:00", SerializedTranslation(translation)["publishedAt"]!.GetValue<string>());
     }
 
+    [Fact]
+    public void Tags_are_written_per_translation()
+    {
+        var translation = new Translation(Language.De, "Chaos pur", "chaos-pur", AnyBody) { Tags = ["Indien", "Verkehr"] };
+
+        var tags = SerializedTranslation(translation)["tags"]!.AsArray().Select(t => t!.GetValue<string>());
+
+        Assert.Equal(["Indien", "Verkehr"], tags);
+    }
+
+    [Fact]
+    public void Author_is_written_on_the_item()
+    {
+        var post = new ExportPost(Id: "journey/any", Author: "Apophis", Blog: "journey", Translations: [new Translation(Language.En, "t", "t", AnyBody)]);
+
+        Assert.Equal("Apophis", JsonNode.Parse(ExportJson.Serialize(post))!["author"]!.GetValue<string>());
+    }
+
     private static readonly Body AnyBody = new FullBody("<p>text</p>");
 
     private static JsonNode SerializedTranslation(Translation translation)
-        => JsonNode.Parse(ExportJson.Serialize(new ExportPost(Id: "journey/any", Blog: "journey", Translations: [translation])))!["translations"]![0]!;
+        => JsonNode.Parse(ExportJson.Serialize(new ExportPost(Id: "journey/any", Author: "Apophis", Blog: "journey", Translations: [translation])))!["translations"]![0]!;
 
     private static void AssertJsonEqual(string expected, string actual)
         => Assert.True(
