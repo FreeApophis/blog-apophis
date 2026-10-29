@@ -19,4 +19,12 @@ public sealed class ManifestTests
 
         FunctionalAssert.Right(expected, Manifest.Parse(csv).Select(entries => entries.Single()));
     }
+
+    [Fact]
+    public void Invalid_timestamp_is_an_error_naming_the_line()
+    {
+        var csv = Header + "a.html,20070212193544,http://a/,text/html\nb.html,not-a-date,http://b/,text/html\n";
+
+        FunctionalAssert.Left("line 3: invalid timestamp 'not-a-date'", Manifest.Parse(csv));
+    }
 }
