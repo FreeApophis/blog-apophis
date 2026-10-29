@@ -20,6 +20,11 @@
     <Using Include="Funcky.Extensions" />
   </ItemGroup>
 
+  <!-- every production project shows its internals to its own test project -->
+  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
+    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+  </ItemGroup>
+
   <!-- test projects (name ends in .Tests): xUnit v3 + Funcky assertions -->
   <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
     <OutputType>Exe</OutputType>
