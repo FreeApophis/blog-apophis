@@ -22,4 +22,13 @@ public sealed class HtmlDecodingTests
 
         Assert.Contains("5 € für Münzen", HtmlDecoding.Decode(bytes), StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void Undeclared_non_utf8_bytes_are_read_as_windows_1252()
+    {
+        // 0x80 is the euro sign in windows-1252 but a control character in iso-8859-1
+        byte[] bytes = [.. "<p>"u8, 0x80, .. " 5</p>"u8];
+
+        Assert.Equal("<p>€ 5</p>", HtmlDecoding.Decode(bytes));
+    }
 }
