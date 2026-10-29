@@ -16,6 +16,7 @@ public static class SilverStripeRss
     public static Either<string, IReadOnlyList<ParsedPost>> Parse(LoadedFile file)
         => LoadXml(file).SelectMany(feed => feed
             .Descendants("item")
+            .Where(item => !IsComment(item))
             .Select(item => ToPost(file.Entry, item))
             .Sequence());
 
@@ -33,6 +34,10 @@ public static class SilverStripeRss
                Blog: path.SkipWhile(segment => segment != "blogs").Skip(1).FirstOrNone(),
                new FullBody(html),
                PublishedAt: Optional(item, "pubDate").SelectMany(SwissLocalTime));
+
+    /// <summary>Comment feeds and blog feeds mix in comments as items linking to <c>…/#comment-N</c>.</summary>
+    private static bool IsComment(XElement item)
+        => Optional(item, "link").Match(none: false, some: link => link.Contains("#comment-", StringComparison.Ordinal));
 
     private static Either<string, string> Required(ManifestEntry origin, XElement item, string name)
         => Optional(item, name).ToEither($"{origin.LocalFile}: <item> without <{name}>");

@@ -37,6 +37,33 @@ public sealed class SilverStripeRssTests
         Assert.Equal(Option.Some(new DateTimeOffset(2008, 10, 18, 7, 27, 16, TimeSpan.FromHours(2))), post.PublishedAt);
     }
 
+    [Fact]
+    public void Mislabelled_utc_time_on_apophis_ch_is_read_as_swiss_local_time()
+    {
+        var feed = Feed(Item("Pure Chaos", "http://apophis.ch/blogs/journey-blog/pure-chaos/", "Mon, 14 Jul 2008 15:20:23 +0000"));
+
+        var post = Assert.Single(Parse(feed, "apophis.ch/blogs/journey-blog/rss.xml"));
+
+        Assert.Equal(Language.En, post.Language);
+        Assert.Equal(Option.Some(new DateTimeOffset(2008, 7, 14, 15, 20, 23, TimeSpan.FromHours(2))), post.PublishedAt);
+    }
+
+    [Fact]
+    public void Comment_items_are_not_posts()
+    {
+        var feed = Feed(
+            Item("ut3 Global Player Stats API", "http://apophis.ch/blogs/development-blog/ut3-global-player-stats-api/", "Fri, 19 Feb 2010 16:24:00 +0000"),
+            Item("Comment by 'Transporter' on ut3 Global Player Stats API", "http://apophis.ch/blogs/development-blog/ut3-global-player-stats-api/#comment-1", "Sun, 23 Sep 2012 13:32:00 +0000"));
+
+        Assert.Equal(["ut3 Global Player Stats API"], Parse(feed, "apophis.ch/blogs/development-blog/rss.xml").Select(p => p.Title));
+    }
+
+    private static string Feed(params string[] items)
+        => $"<?xml version=\"1.0\"?><rss version=\"2.0\"><channel>{string.Concat(items)}</channel></rss>";
+
+    private static string Item(string title, string link, string pubDate)
+        => $"<item><title>{title}</title><link>{link}</link><description>&lt;p&gt;text&lt;/p&gt;</description><pubDate>{pubDate}</pubDate></item>";
+
     private static IReadOnlyList<ParsedPost> Parse(string feed, string localFile)
         => SilverStripeRss.Parse(new LoadedFile(new ManifestEntry(localFile, DateTimeOffset.UnixEpoch, "http://" + localFile, "application/rss+xml"), feed))
             .GetOrElse(error => throw new InvalidOperationException(error));
