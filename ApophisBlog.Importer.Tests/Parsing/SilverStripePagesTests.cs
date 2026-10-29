@@ -42,6 +42,20 @@ public sealed class SilverStripePagesTests
         Assert.Equal(new SummaryBody("<p>It is hot... the weather is sticky... and its raining\nregularly...</p>"), namaste.Body);
     }
 
+    [Fact]
+    public void Comments_of_a_detail_page_are_read()
+    {
+        var page = Fixture("silverstripe/ut3-global-player-stats-api.html", "apophis.ch/blogs/development-blog/ut3-global-player-stats-api/index.html", "http://apophis.ch/blogs/development-blog/ut3-global-player-stats-api/");
+
+        var post = Assert.Single(SilverStripePages.Parse(page).GetOrElse(error => throw new InvalidOperationException(error)));
+
+        var comment = Assert.Single(post.Comments);
+        Assert.Equal("silverstripe:apophis.ch:1", comment.Id);
+        Assert.Equal("Transporter", comment.Author);
+        Assert.Equal("<p>The downloads are not working. I'm still interested in your stats tool.</p>", comment.Html);
+        Assert.Equal(Option.Some(new DateTimeOffset(2012, 9, 23, 13, 32, 0, TimeSpan.FromHours(2))), comment.PostedAt);
+    }
+
     private static LoadedFile Fixture(string fixture, string localFile, string originalUrl)
         => new(
             new ManifestEntry(localFile, DateTimeOffset.UnixEpoch, originalUrl, "text/html"),

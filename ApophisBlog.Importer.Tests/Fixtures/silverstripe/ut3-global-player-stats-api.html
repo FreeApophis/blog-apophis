@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <!--[if lte IE 6]></base><![endif]-->
+
+    <title>Apophis - ut3 Global Player Stats API</title>
+    <meta name="generator" content="SilverStripe - http://silverstripe.org" />
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    
+    <link rel="shortcut icon" href="../../../themes/tb/images/favicon.ico" />
+
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+
+    
+    <!--[if lt IE 9]>
+        <script src="../../../themes/tb/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="../../../blog/css/blog.css@m=1434721341.css" />
+<link rel="stylesheet" type="text/css" href="../../../themes/tb/css/bootstrap.css@m=1434721594.css" />
+<link rel="stylesheet" type="text/css" href="../../../themes/tb/css/bootstrap-responsive.css@m=1434721594.css" />
+<link rel="stylesheet" type="text/css" href="../../../themes/tb/css/font-awesome.css@m=1434721594.css" />
+<link rel="stylesheet" type="text/css" href="../../../themes/tb/css/prettyPhoto.css@m=1434721594.css" />
+<link rel="stylesheet" type="text/css" href="../../../themes/tb/css/style.css@m=1434721594.css" />
+</head>
+    <body class="BlogEntry">
+        <div class="container">
+    <ul role="menu" class="nav skiplinks">
+        <li role="presentation"><a href="index.html#content" title="zum Inhalt springen">zum Inhalt</a></li>
+        <li role="presentation"><a href="index.html#subcontent" title="zum Sekundärinhalt springen">zum Sekundärinhalt</a></li>
+        <li role="presentation"><a href="index.html#footer" title="zum Fußbereich springen">zum Fußbereich</a></li>
+    </ul>
+</div>
+
+        <header style="min-height: 150px;">
+  <div class="container">
+    <ul class="social-flag">
+  
+    
+        <li class="drop-shadow">
+            <a href="http://twitter.com/freeapophis"><img src="../../../themes/tb/images/social/twitter.png" alt="Facebook"><strong>Twitter</strong></a>
+        </li>
+    
+        <li class="drop-shadow">
+            <a href="https://github.com/FreeApophis"><img src="../../../themes/tb/images/social/github.png" alt="Facebook"><strong>GitHub</strong></a>
+        </li>
+    
+        <li class="drop-shadow">
+            <a href="../../rss.xml"><img src="../../../themes/tb/images/social/rss.png" alt="Facebook"><strong>RSS</strong></a>
+        </li>
+    
+   
+</ul>
+
+    <a href="../../../index.html" title="">
+      
+        <img src="../../../assets/Uploads/logo-apophis.png" alt="Apophis" title="Impact before 2036..."/>
+      
+    </a>
+  </div>
+</header>
+
+
+        <div class="navigation">
+    <div class="container">
+        <div class="navbar navbar-inverse">
+            <div class="navbar-inner">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        
+                            <li class="link first"><a href="../../../index.html" title="Home">Home</a>
+                                 
+                            </li>
+                        
+                            <li class="link "><a href="../../../about/index.html" title="About">About</a>
+                                
+                                    <ul class="tb-dropdown">
+                                        
+                                            <li class=""><a href="../../../about/contact/index.html">Contact</a></li>
+                                        
+                                    </ul>
+                                 
+                            </li>
+                        
+                            <li class="section "><a href="../../index.html" title="Blogs">Blogs</a>
+                                
+                                    <ul class="tb-dropdown">
+                                        
+                                            <li class=""><a href="../index.html">Development Blog</a></li>
+                                        
+                                            <li class=""><a href="../../politics-blog/index.html">Politics Blog</a></li>
+                                        
+                                            <li class=""><a href="../../journey-blog/index.html">Journey Blog</a></li>
+                                        
+                                            <li class=""><a href="../../other-blog/index.html">Other Blog</a></li>
+                                        
+                                    </ul>
+                                 
+                            </li>
+                        
+                            <li class="link last"><a href="../../../projects/index.html" title="Projects">Projects</a>
+                                
+                                    <ul class="tb-dropdown">
+                                        
+                                            <li class=""><a href="../../../projects/ruby-mumble-bot/index.html">Ruby-Mumble-Bot</a></li>
+                                        
+                                            <li class=""><a href="../../../projects/zensorchecker/index.html">Zensorchecker</a></li>
+                                        
+                                            <li class=""><a href="/projects/fcp2lib.net/">FCP2lib.NET</a></li>
+                                        
+                                            <li class=""><a href="../../../projects/huffelpuff-irc-bot-and-plugins/index.html">Huffelpuff Irc-Bot and Plugins</a></li>
+                                        
+                                    </ul>
+                                 
+                            </li>
+                        
+                    </ul>
+                    
+
+                    <form class="navbar-search pull-right" enctype="application/x-www-form-urlencoded" method="get" action="/home/SearchForm">
+                        <input type="text" name="Search" id="SearchForm_SearchForm_Search" class="search-query" placeholder="Search" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="breadcrumbs">
+  
+    <div class="breadcrumbs">
+        <div class="container">
+            <ol>
+                <li>
+                    <a href="../../../index.html"><i class="icon-home"></i></a><span class="divider"><i class="icon-double-angle-right"></i></span>
+                </li>
+
+                
+                    
+                        <li>
+                            <a href="../../index.html">Blogs</a><span class="divider"><i class="icon-double-angle-right"></i></span>
+                        </li>
+                    
+                
+                    
+                        <li>
+                            <a href="../index.html">Development Blog</a><span class="divider"><i class="icon-double-angle-right"></i></span>
+                        </li>
+                    
+                
+                    
+                        <li class="active">
+                            ut3 Global Player Stats API
+                        </li>
+                    
+                
+            </ol>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="front"></div>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="span3">
+                <div class="sidebar">
+  
+    <div class="content well" style="padding: 8px 0;">    
+      <ul class="nav nav-list">
+        
+          
+            <li class="section">
+              <a href="../index.html">
+                <i class="icon-level-up"></i> Development Blog
+              </a>
+            </li>
+          
+        
+
+        <li class="current">
+          <a href="index.html">
+            <i class="icon-chevron-right icon-white"></i> ut3 Global Player Stats API
+          </a>
+        </li>
+
+        
+      </ul>
+    </div>
+  
+
+  
+        <div class="typography">
+                
+        </div>
+
+
+
+  <blockquote>
+    <p>Those who surrender freedom for security will not have, nor do they deserve, either one.</p>
+    <small>Benjamin Franklin</small>
+  </blockquote>
+  
+</div>
+
+
+            </div>
+            <div class="span9 typography">
+
+        <div class="blogEntry">
+
+            <a class="date pull-right" href="index.html">
+                <abbr title="April">Feb</abbr>19<sup>th</sup> <abbr>’10</abbr>
+                <sub>4:24 pm</sub>
+            </a>
+
+                <h2 class="postTitle">ut3 Global Player Stats API</h2>
+                <p class="authorDate">Posted by Apophis</p>
+                
+                        <p class="tags">
+                                <i class="icon-tag"></i>
+                                
+                                        <a href="../tag/UT3/index.html" title="View all posts tagged 'UT3'" rel="tag">UT3</a>,
+                                
+                                        <a href="../tag/API/index.html" title="View all posts tagged 'API'" rel="tag">API</a>,
+                                
+                                        <a href="../tag/C%23/index.html" title="View all posts tagged 'C#'" rel="tag">C#</a>
+                                
+                        </p>
+                
+                <p> 62 Comments</p>
+                <p>My<a href="http://apophis.ch/node/35" data-cke-saved-href="http://apophis.ch/node/35"> ut3 Global Player Stats</a> Projects relies on the Stats aquired by GameSpy. It looks like the have changed their Authentication scheme recently and this resulted in a nonworking Stats Application.</p>
+<p>I Updated the Code and fixed some minor Bugs to make it work again!</p>
+<p><strong>Please Notice: You need to use the UT3 Account now, not an Account from login.gamespy.com. I know it was confusing before and now it should be more logical!</strong></p>
+<p>Hope you enjoy the possibillities!</p>
+<p>Console Program:<br><a href="http://download.apophis.ch/UT3/ut3playerStats.exe" target="_blank" data-cke-saved-href="http://download.apophis.ch/UT3/ut3playerStats.exe">http://download.apophis.ch/UT3/ut3playerStats.exe</a><br><br>Source Program:<br><a href="http://download.apophis.ch/UT3/gameSpyWebService.zip" target="_blank" data-cke-saved-href="http://download.apophis.ch/UT3/gameSpyWebService.zip">http://download.apophis.ch/UT3/gameSpyWebService.zip</a><br><br>Example Webpages:<br><a href="http://prx.apophis.ch/dynamic/player.php" target="_blank" data-cke-saved-href="http://prx.apophis.ch/dynamic/player.php">http://prx.apophis.ch/dynamic/player.php</a><br><a href="http://prx.apophis.ch/dynamic/topten.php" data-cke-saved-href="http://prx.apophis.ch/dynamic/topten.php">http://prx.apophis.ch/dynamic/topten.php</a></p>
+        </div>
+
+        
+
+        
+
+        <div id="socialshareprivacy" class="clearfix"></div>
+
+
+
+        
+  <div id="comments-holder" class="comments-holder-container">
+    <h4>Comments</h4>
+    <div class="comments-holder">
+      
+        <ul class="comments-list">
+          
+            <li class="comment odd first last  notspam">
+              
+  <p class="info">
+    
+      Posted by Transporter, 23/09/2012 1:32pm (4 years ago)
+    
+  </p>
+
+
+<div class="comment" id="comment-1">
+  
+  <i class="icon-quote-left icon-4x pull-left icon-muted"></i>
+  <p>The downloads are not working. I&#039;m still interested in your stats tool.</p>
+</div>
+
+
+
+  
+
+
+            </li>
+          
+        </ul>
+        
+      
+      <p class="no-comments-yet" style='display: none'  >No one has commented on this page yet.</p>
+    </div>
+		
+    
+
+    <h4>Post your comment</h4>
+		
+    
+      
+        
+        
+<form id="Form_CommentsForm" action="../../../CommentingController/CommentsForm" method="post" enctype="application/x-www-form-urlencoded">
+
+	
+	<p id="Form_CommentsForm_error" class="message " style="display: none"></p>
+	
+	
+	<fieldset>
+		 
+		
+			<div class="CompositeField composite data-fields nolabel ">
+	
+	
+	
+		
+			<div id="Name" class="field text">
+	<label class="left" for="Form_CommentsForm_Name">Your name</label>
+	<div class="middleColumn">
+		<input type="text" name="Name" class="text" id="Form_CommentsForm_Name" data-message-required="Please enter your name" />
+	</div>
+	
+	
+</div>
+		
+	
+		
+			<div id="Email" class="field email text">
+	<label class="left" for="Form_CommentsForm_Email">Your email address (will not be published)</label>
+	<div class="middleColumn">
+		<input type="email" name="Email" class="email text" id="Form_CommentsForm_Email" data-message-required="Please enter your email address" data-message-email="Please enter a valid email address" />
+	</div>
+	
+	
+</div>
+		
+	
+		
+			<div id="URL" class="field text">
+	<label class="left" for="Form_CommentsForm_URL">Your website URL</label>
+	<div class="middleColumn">
+		<input type="text" name="URL" class="text" id="Form_CommentsForm_URL" data-message-url="Please enter a valid URL" />
+	</div>
+	
+	
+</div>
+		
+	
+		
+			<div id="Comment" class="field textarea">
+	<label class="left" for="Form_CommentsForm_Comment">Comments</label>
+	<div class="middleColumn">
+		<textarea name="Comment" class="textarea" id="Form_CommentsForm_Comment" data-message-required="Please enter your comment" rows="5" cols="20"></textarea>
+	</div>
+	
+	
+</div>
+		
+	
+</div>
+		
+			<input type="hidden" name="ParentID" value="54" class="hidden" id="Form_CommentsForm_ParentID" />
+
+		
+			<input type="hidden" name="ReturnURL" value="http://apophis.ch/blogs/development-blog/ut3-global-player-stats-api/" class="hidden" id="Form_CommentsForm_ReturnURL" />
+
+		
+			<input type="hidden" name="BaseClass" value="SiteTree" class="hidden" id="Form_CommentsForm_BaseClass" />
+
+		
+			<input type="hidden" name="SecurityID" value="60d1a20452a5763e5e81f0a36522a0c1cce0add4" class="hidden" id="Form_CommentsForm_SecurityID" />
+
+		
+		<div class="clear"><!-- --></div>
+	</fieldset>
+
+	
+	<div class="Actions">
+		
+			
+	<input type="submit" name="action_doPostComment" value="Post" class="action action" id="Form_CommentsForm_action_doPostComment" />
+
+		
+	</div>
+	
+
+</form>
+
+
+      
+    
+
+    <p class="commenting-rss-feed">
+      <a href="../../../CommentingController/rss/SiteTree/54">RSS feed for comments on this page</a> | 
+      <a href="../../../CommentingController/rss">RSS feed for all comments</a>
+    </p>
+  </div>
+
+	
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div class="subcontent" id="#subcontent">
+  <div class="container">
+    <div class="row">
+      <div class="span4 left-row">
+        <div>
+          <h3>Infos</h3>
+<ul class="icons-ul"><li><i class="icon-chevron-right"></i> About</li>
+<li><i class="icon-chevron-right"></i> Privacy Policy</li>
+</ul>
+        </div>
+      </div>
+      <div class="span4 center-row">
+        <div>
+          
+        </div>
+      </div>
+      <div class="span4 right-row">
+        <div>
+          <h3>Hotlinks</h3>
+<ul class="icons-ul"><li><i class="icon-chevron-right"></i> <a href="http://thomasbruderer.ch">Thomas Bruderer</a></li>
+</ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="span4 left-row">
+        <div class="end">
+        </div>
+      </div>
+      <div class="span4 center-row">
+        <div class="end">
+        </div>
+      </div>
+      <div class="span4 right-row">
+        <div class="end">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script type="text/javascript" src="../../../framework/thirdparty/jquery/jquery.js@m=1434721421.js"></script><script type="text/javascript" src="../../../framework/thirdparty/jquery-validate/lib/jquery.form.js@m=1434721529.js"></script><script type="text/javascript" src="../../../framework/thirdparty/jquery-validate/jquery.validate.pack.js@m=1434721529.js"></script><script type="text/javascript" src="../../../comments/javascript/CommentsInterface.js@m=1434721575.js"></script><script type="text/javascript" src="../../../themes/tb/js/jquery-2.0.2.js@m=1434721594.js"></script><script type="text/javascript" src="../../../themes/tb/js/bootstrap.min.js@m=1434721594.js"></script><script type="text/javascript" src="../../../themes/tb/js/jquery.nivo.slider.js@m=1434721592.js"></script><script type="text/javascript" src="../../../themes/tb/js/jquery.socialshareprivacy.min.js@m=1434721592.js"></script><script type="text/javascript" src="../../../themes/tb/js/jquery.prettyPhoto.js@m=1434721594.js"></script><script type="text/javascript" src="../../../themes/tb/js/custom.js@m=1434721594.js"></script></body>
+</html>

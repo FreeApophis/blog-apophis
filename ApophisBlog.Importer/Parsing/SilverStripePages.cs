@@ -23,8 +23,29 @@ public static partial class SilverStripePages
                 none: () => document.QuerySelectorAll("div.blogSummary:not(.row)")
                     .Select(summary => ListedPost(file.Entry, summary))
                     .Sequence(),
-                some: entry => Post(file.Entry, entry, file.Entry.OriginalUrl, html => new FullBody(html)).Select(post => (IReadOnlyList<ParsedPost>)[post]));
+                some: entry => Post(file.Entry, entry, file.Entry.OriginalUrl, html => new FullBody(html))
+                    .Select(post => (IReadOnlyList<ParsedPost>)[post with { Comments = Comments(file.Entry, document) }]));
     }
+
+    /// <summary><c>li.comment</c>: "Posted by Name, 23/09/2012 1:32pm (4 years ago)" plus the text in <c>div.comment#comment-N</c>.</summary>
+    private static List<Comment> Comments(ManifestEntry origin, IDocument document)
+        => document.QuerySelectorAll("#comments-holder li.comment")
+            .WhereSelect(item => Comment(origin, item))
+            .ToList();
+
+    private static Option<Comment> Comment(ManifestEntry origin, IElement item)
+        => from text in Option.FromNullable(item.QuerySelector("div.comment[id^=comment-]"))
+           from info in Option.FromNullable(item.QuerySelector("p.info")).Select(p => CommentInfo().Match(p.TextContent)).Where(match => match.Success)
+           select new Comment(
+               Id: $"silverstripe:{origin.LocalFile.Split('/')[0]}:{text.Id!["comment-".Length..]}",
+               Author: info.Groups["author"].Value.Trim(),
+               Html: string.Join("\n", text.Children.Where(child => child.LocalName != "i").Select(child => child.OuterHtml)),
+               PostedAt: CommentDate(info.Groups["date"].Value));
+
+    private static Option<DateTimeOffset> CommentDate(string date)
+        => DateTime.TryParseExact(date, "dd/MM/yyyy h:mmtt", CultureInfo.InvariantCulture, DateTimeStyles.None, out var clock)
+            ? SilverStripeSite.SwissLocal(clock)
+            : Option<DateTimeOffset>.None;
 
     /// <summary>A listing entry links to its post; the link may be absolute or rewritten to a relative local file.</summary>
     private static Either<string, ParsedPost> ListedPost(ManifestEntry origin, IElement summary)
@@ -71,4 +92,7 @@ public static partial class SilverStripePages
 
     [GeneratedRegex(@"(?<month>[A-Z][a-z]{2})\s*(?<day>\d{1,2})(?:st|nd|rd|th)\s*[’'](?<year>\d{2})\s*(?<time>\d{1,2}:\d{2}\s*[ap]m)")]
     private static partial Regex VisibleDate();
+
+    [GeneratedRegex(@"Posted by (?<author>.+?), (?<date>\d{2}/\d{2}/\d{4} \d{1,2}:\d{2}[ap]m)")]
+    private static partial Regex CommentInfo();
 }
