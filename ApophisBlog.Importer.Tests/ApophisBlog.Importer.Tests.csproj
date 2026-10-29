@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\ApophisBlog.Importer\ApophisBlog.Importer.csproj" />
+  </ItemGroup>
+</Project>

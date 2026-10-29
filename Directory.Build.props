@@ -9,5 +9,26 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <Deterministic>true</Deterministic>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
+    <IsTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
   </PropertyGroup>
+
+  <!-- every project is written against Funcky -->
+  <ItemGroup>
+    <PackageReference Include="Funcky" />
+    <Using Include="Funcky" />
+    <Using Include="Funcky.Monads" />
+  </ItemGroup>
+
+  <!-- test projects (name ends in .Tests): xUnit v3 + Funcky assertions -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Funcky.Xunit.v3" />
+    <Using Include="Xunit" />
+  </ItemGroup>
 </Project>

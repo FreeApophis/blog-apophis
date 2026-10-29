@@ -1,2 +1,4 @@
 <Solution>
+  <Project Path="ApophisBlog.Importer.Tests/ApophisBlog.Importer.Tests.csproj" />
+  <Project Path="ApophisBlog.Importer/ApophisBlog.Importer.csproj" />
 </Solution>
