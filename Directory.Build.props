@@ -17,6 +17,7 @@
     <PackageReference Include="Funcky" />
     <Using Include="Funcky" />
     <Using Include="Funcky.Monads" />
+    <Using Include="Funcky.Extensions" />
   </ItemGroup>
 
   <!-- test projects (name ends in .Tests): xUnit v3 + Funcky assertions -->
