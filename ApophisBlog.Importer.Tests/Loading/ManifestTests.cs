@@ -27,4 +27,13 @@ public sealed class ManifestTests
 
         FunctionalAssert.Left("line 3: invalid timestamp 'not-a-date'", Manifest.Parse(csv));
     }
+
+    [Fact]
+    public void File_listed_twice_keeps_its_last_row()
+    {
+        var csv = Header + "apophis.eu/node/106/index.html,20101206000000,http://apophis.eu/node/106,text/html\n"
+                         + "apophis.eu/node/106/index.html,20110619000000,http://apophis.eu/node/106/,text/html\n";
+
+        FunctionalAssert.Right(["http://apophis.eu/node/106/"], Manifest.Parse(csv).Select(entries => entries.Select(e => e.OriginalUrl).ToList()));
+    }
 }

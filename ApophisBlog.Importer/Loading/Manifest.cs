@@ -18,7 +18,11 @@ public static partial class Manifest
             .Skip(1)
             .Where(row => row.Line.Length > 0)
             .Select(row => ParseRow(row.Line, row.Number))
-            .Sequence();
+            .Sequence()
+            .Select(LastRowPerFile);
+
+    private static IReadOnlyList<ManifestEntry> LastRowPerFile(IReadOnlyList<ManifestEntry> entries)
+        => entries.GroupBy(entry => entry.LocalFile).Select(rows => rows.Last()).ToList();
 
     private static Either<string, ManifestEntry> ParseRow(string line, int number)
         => Fields(line) switch
