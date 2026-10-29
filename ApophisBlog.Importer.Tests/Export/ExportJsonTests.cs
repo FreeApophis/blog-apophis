@@ -28,6 +28,29 @@ public sealed class ExportJsonTests
             ExportJson.Serialize(post));
     }
 
+    [Fact]
+    public void Optional_headline_is_written_when_present()
+    {
+        var translation = new Translation(Language.De, "Chaos pur", "chaos-pur", Headline: Option.Some("Was gibt es aus Indien zu erzählen"));
+
+        var json = JsonNode.Parse(ExportJson.Serialize(PostWith(translation)))!;
+
+        Assert.Equal("Was gibt es aus Indien zu erzählen", json["translations"]![0]!["headline"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public void Optional_headline_is_left_out_when_absent()
+    {
+        var translation = new Translation(Language.De, "Chaos pur", "chaos-pur");
+
+        var json = JsonNode.Parse(ExportJson.Serialize(PostWith(translation)))!;
+
+        Assert.False(json["translations"]![0]!.AsObject().ContainsKey("headline"));
+    }
+
+    private static ExportPost PostWith(Translation translation)
+        => new(Id: "journey/chaos-pur", Blog: "journey", Translations: [translation]);
+
     private static void AssertJsonEqual(string expected, string actual)
         => Assert.True(
             JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)),

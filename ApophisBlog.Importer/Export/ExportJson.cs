@@ -3,6 +3,7 @@ namespace ApophisBlog.Importer.Export;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 public static class ExportJson
 {
@@ -11,7 +12,8 @@ public static class ExportJson
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         WriteIndented = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase), new OptionJsonConverter() },
+        TypeInfoResolver = new DefaultJsonTypeInfoResolver { Modifiers = { OptionJsonConverter.SkipNone } },
     };
 
     public static string Serialize(ExportItem item)

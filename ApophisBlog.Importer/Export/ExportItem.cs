@@ -9,7 +9,7 @@ public closed record ExportItem(string Id, IReadOnlyList<Translation> Translatio
 public sealed record ExportPost(string Id, string Blog, IReadOnlyList<Translation> Translations)
     : ExportItem(Id, Translations);
 
-public sealed record Translation(Language Language, string Title, string Slug);
+public sealed record Translation(Language Language, string Title, string Slug, Option<string> Headline = default);
 
 public enum Language
 {
