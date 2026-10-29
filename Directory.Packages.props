@@ -12,6 +12,10 @@
     <PackageVersion Include="Funcky" Version="3.7.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Parsing">
+    <PackageVersion Include="AngleSharp" Version="1.8.6" />
+  </ItemGroup>
+
   <ItemGroup Label="Testing">
     <!-- xunit.v3 is held at 1.x: Funcky.Xunit.v3 1.0.0 requires xunit.v3 [1.0.1, 2.0.0) -->
     <PackageVersion Include="xunit.v3" Version="1.1.0" />

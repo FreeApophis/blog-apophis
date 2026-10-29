@@ -2,4 +2,8 @@
   <ItemGroup>
     <ProjectReference Include="..\ApophisBlog.Importer\ApophisBlog.Importer.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- unmodified pages copied from content/ -->
+    <None Include="Fixtures/**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
