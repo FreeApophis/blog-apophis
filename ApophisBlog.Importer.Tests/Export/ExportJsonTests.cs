@@ -29,6 +29,7 @@ public sealed class ExportJsonTests
                   "slug": "hello-hongkong",
                   "tags": [],
                   "sources": [],
+                  "comments": [],
                   "body": { "completeness": "full", "html": "<p>Hello</p>" }
                 }
               ]
@@ -130,6 +131,23 @@ public sealed class ExportJsonTests
             ]
             """,
             SerializedTranslation(translation)["sources"]!.ToJsonString());
+    }
+
+    [Fact]
+    public void Comments_are_written_with_optional_date_and_parent()
+    {
+        var question = new Comment(Id: "phpnews:379", Author: "Apophis", Html: "<p>Captchas</p>", PostedAt: new DateTimeOffset(2006, 4, 14, 16, 56, 6, TimeSpan.FromHours(2)));
+        var reply = new Comment(Id: "phpnews:380", Author: "Duke", Html: "<p>Nice</p>", ParentId: "phpnews:379");
+        var translation = new Translation(Language.En, "Domain News", "domain-news", AnyBody) { Comments = [question, reply] };
+
+        AssertJsonEqual(
+            """
+            [
+              { "id": "phpnews:379", "author": "Apophis", "html": "<p>Captchas</p>", "postedAt": "2006-04-14T16:56:06+02:00" },
+              { "id": "phpnews:380", "author": "Duke", "html": "<p>Nice</p>", "parentId": "phpnews:379" }
+            ]
+            """,
+            SerializedTranslation(translation)["comments"]!.ToJsonString());
     }
 
     private static readonly Body AnyBody = new FullBody("<p>text</p>");

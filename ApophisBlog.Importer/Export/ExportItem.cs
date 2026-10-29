@@ -24,7 +24,16 @@ public sealed record Translation(
     public IReadOnlyList<string> Tags { get; init; } = [];
 
     public IReadOnlyList<Source> Sources { get; init; } = [];
+
+    public IReadOnlyList<Comment> Comments { get; init; } = [];
 }
+
+public sealed record Comment(
+    string Id,
+    string Author,
+    string Html,
+    Option<DateTimeOffset> PostedAt = default,
+    Option<string> ParentId = default);
 
 /// <summary>One archived copy of a translation, with the publication date that copy claims.</summary>
 public sealed record Source(
