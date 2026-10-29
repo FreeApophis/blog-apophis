@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup Label="Analyzers (referenced by every project)">
+    <GlobalPackageReference Include="Funcky.Analyzers" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Functional">
+    <PackageVersion Include="Funcky" Version="3.7.0" />
+  </ItemGroup>
+</Project>
