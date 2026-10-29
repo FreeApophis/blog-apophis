@@ -22,6 +22,25 @@ public sealed record Translation(
     Option<DateTimeOffset> PublishedAt = default)
 {
     public IReadOnlyList<string> Tags { get; init; } = [];
+
+    public IReadOnlyList<Source> Sources { get; init; } = [];
+}
+
+/// <summary>One archived copy of a translation, with the publication date that copy claims.</summary>
+public sealed record Source(
+    SourceSystem System,
+    string OriginalUrl,
+    string LocalFile,
+    DateTimeOffset CapturedAt,
+    Option<DateTimeOffset> PublishedAt = default);
+
+public enum SourceSystem
+{
+    PostNuke,
+    WordPress,
+    PhpNews,
+    Drupal,
+    SilverStripe,
 }
 
 /// <summary>Whether the archived text is the whole post or only a summary from a listing.</summary>

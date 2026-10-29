@@ -28,6 +28,7 @@ public sealed class ExportJsonTests
                   "title": "Hello 香港 (Hongkong)",
                   "slug": "hello-hongkong",
                   "tags": [],
+                  "sources": [],
                   "body": { "completeness": "full", "html": "<p>Hello</p>" }
                 }
               ]
@@ -103,6 +104,32 @@ public sealed class ExportJsonTests
 
         Assert.Equal("page", json["kind"]!.GetValue<string>());
         Assert.False(json.ContainsKey("blog"));
+    }
+
+    [Fact]
+    public void Sources_record_where_each_copy_came_from()
+    {
+        var source = new Source(
+            SourceSystem.Drupal,
+            OriginalUrl: "http://apophis.eu/node/87",
+            LocalFile: "apophis.eu/node/87/index.html",
+            CapturedAt: new DateTimeOffset(2011, 6, 19, 3, 4, 5, TimeSpan.Zero),
+            PublishedAt: new DateTimeOffset(2008, 7, 14, 0, 0, 0, TimeSpan.FromHours(2)));
+        var translation = new Translation(Language.En, "Pure Chaos", "pure-chaos", AnyBody) { Sources = [source] };
+
+        AssertJsonEqual(
+            """
+            [
+              {
+                "system": "drupal",
+                "originalUrl": "http://apophis.eu/node/87",
+                "localFile": "apophis.eu/node/87/index.html",
+                "capturedAt": "2011-06-19T03:04:05+00:00",
+                "publishedAt": "2008-07-14T00:00:00+02:00"
+              }
+            ]
+            """,
+            SerializedTranslation(translation)["sources"]!.ToJsonString());
     }
 
     private static readonly Body AnyBody = new FullBody("<p>text</p>");
